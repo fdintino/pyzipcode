@@ -1,6 +1,7 @@
 from settings import db_location
 from pysqlite2 import dbapi2 as sqlite3
 import math
+import time
 
 class ConnectionManager(object):
     """
@@ -8,10 +9,25 @@ class ConnectionManager(object):
     """
     
     def __init__(self):
-        pass
+        # test out the connection...
+        conn = sqlite3.connect(db_location)
+        conn.close()
             
     def query(self, sql):
-        conn = sqlite3.connect(db_location)
+        conn = None
+        retry_count = 0
+        while not conn and retry_count <= 10:
+        # If there is trouble reading the file, retry for 10 attempts
+        # then just give up...
+            try:
+                conn = sqlite3.connect(db_location)
+            except sqlite3.OperationalError, x:
+                retry_count += 1
+                time.sleep(0.001)
+        
+        if not conn and retry_count > 10:
+            raise sqlite3.OperationalError("Can't connect to sqlite database.")
+                
         cursor = conn.cursor()
         cursor.execute(sql)
         res = cursor.fetchall()
@@ -87,7 +103,6 @@ class ZipCodeDatabase(object):
             return zip[0]
             
     
-        
         
         
         
