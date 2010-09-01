@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+0.3
+---
+
+* use strings instead of integer for storing zip codes since zip codes can start with a Zero.
+
+
 0.2
 ---
 

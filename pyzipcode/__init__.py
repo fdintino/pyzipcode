@@ -34,7 +34,7 @@ class ConnectionManager(object):
         conn.close()
         return res
 
-ZIP_QUERY = "SELECT * FROM ZipCodes WHERE zip=%s"
+ZIP_QUERY = "SELECT * FROM ZipCodes WHERE zip='%s'"
 ZIP_RANGE_QUERY = "SELECT * FROM ZipCodes WHERE longitude >= %s and longitude <= %s AND latitude >= %s and latitude <= %s"
 ZIP_FIND_QUERY = "SELECT * FROM ZipCodes WHERE city LIKE '%s' AND state LIKE '%s'"
 
@@ -96,7 +96,7 @@ class ZipCodeDatabase(object):
         return format_result(self.conn_manager.query(ZIP_QUERY % zip))
             
     def __getitem__(self, zip):
-        zip = self.get(zip)
+        zip = self.get(str(zip))
         if zip is None:
             raise IndexError("Couldn't find zip")
         else:

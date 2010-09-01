@@ -14,9 +14,9 @@ Here is some basic usage..
 
 	>>> from pyzipcode import ZipCodeDatabase
 	>>> zcdb = ZipCodeDatabase()
-	>>> zipcode = zcdb[54115]
+	>>> zipcode = zcdb['54115']
 	>>> zipcode.zip
-	54115
+	'54115'
 	>>> zipcode.city
 	u'DE PERE'
 	>>> zipcode.state
@@ -40,5 +40,5 @@ Get a list of zipcodes around a radius of a zipcode
 	
 	>>> from pyzipcode import ZipCodeDatabase
 	>>> zcdb = ZipCodeDatabase()
-	>>> [z.zip for z in zcdb.get_zipcodes_around_radius(54901, 10)]
-	[54901, 54904, 54932, 54952, 54956, 54979]
+	>>> [z.zip for z in zcdb.get_zipcodes_around_radius('54901', 10)]
+	['54901', '54904', '54932', '54952', '54956', '54979']
