@@ -1,6 +1,7 @@
 
 from pysqlite2 import dbapi2 as sqlite3
 import os
+import csv
 try:
     from settings import db_location
 except:
@@ -10,28 +11,25 @@ conn = sqlite3.connect(db_location)
 c = conn.cursor()
 
 c.execute("DROP TABLE IF EXISTS ZipCodes;")
-c.execute("CREATE TABLE ZipCodes(zip VARCHAR(5), city TEXT, state TEXT, longitude DOUBLE, latitude DOUBLE);")
+c.execute("CREATE TABLE ZipCodes(zip VARCHAR(5), city TEXT, state TEXT, longitude DOUBLE, latitude DOUBLE, timezone INT, dst INT);")
 c.execute("CREATE INDEX zip_index ON ZipCodes(zip);")
 c.execute("CREATE INDEX city_index ON ZipCodes(city);")
 c.execute("CREATE INDEX state_index ON ZipCodes(state);")
 
-fi = open('zips.txt')
-lines = fi.readlines()
-states = {}
-cities = {}
-zips = {}
-for line in lines:
-    zip, state, city, longt, lat = line.split(',')[1:-2]
-    zip = int(zip.strip('"'))
-    state = state.strip('"')
-    city = city.strip('"')
+reader = csv.reader(open('zipcode.csv', "rb"))
+reader.next() # prime it
     
-    c.execute("INSERT INTO ZipCodes values('%s', '%s', '%s', %s, %s)" % (
+for row in reader:
+    zip, city, state, lat, longt, timezone, dst = row
+    
+    c.execute('INSERT INTO ZipCodes values("%s", "%s", "%s", %s, %s, %s, %s)' % (
         zip,
         city,
         state,
         float(longt),
-        float(lat)
+        float(lat),
+        timezone,
+        dst
     ))
     
 conn.commit()

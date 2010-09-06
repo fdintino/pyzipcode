@@ -45,6 +45,8 @@ class ZipCode(object):
         self.state = data[2]
         self.longitude = data[3]
         self.latitude = data[4]
+        self.timezone = data[5]
+        self.dst = data[6]
 
 def format_result(zips):
     if len(zips) > 0:

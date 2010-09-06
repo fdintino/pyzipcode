@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+0.4
+---
+
+* updated to use maxmind database http://www.maxmind.com/app/postalcode
+
+* now also keeps timezone and dst values
+
+* longitude and latitude is now contains negative numbers
+
+* 
+
+
 0.3
 ---
 
