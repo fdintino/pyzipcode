@@ -16,7 +16,7 @@ class ConnectionManager(object):
         conn = sqlite3.connect(db_location)
         conn.close()
             
-    def query(self, sql):
+    def query(self, sql, args):
         conn = None
         retry_count = 0
         while not conn and retry_count <= 10:
@@ -32,14 +32,14 @@ class ConnectionManager(object):
             raise sqlite3.OperationalError("Can't connect to sqlite database.")
                 
         cursor = conn.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, args)
         res = cursor.fetchall()
         conn.close()
         return res
 
-ZIP_QUERY = "SELECT * FROM ZipCodes WHERE zip='%s'"
+ZIP_QUERY = "SELECT * FROM ZipCodes WHERE zip=?"
 ZIP_RANGE_QUERY = "SELECT * FROM ZipCodes WHERE longitude >= %s and longitude <= %s AND latitude >= %s and latitude <= %s"
-ZIP_FIND_QUERY = "SELECT * FROM ZipCodes WHERE city LIKE '%s' AND state LIKE '%s'"
+ZIP_FIND_QUERY = "SELECT * FROM ZipCodes WHERE city LIKE ? AND state LIKE ?"
 
 class ZipCode(object):
     def __init__(self, data):
@@ -95,10 +95,10 @@ class ZipCodeDatabase(object):
         else:
             state = state.upper()
             
-        return format_result(self.conn_manager.query(ZIP_FIND_QUERY % (city, state)))
+        return format_result(self.conn_manager.query(ZIP_FIND_QUERY, [city, state]))
         
     def get(self, zip):
-        return format_result(self.conn_manager.query(ZIP_QUERY % zip))
+        return format_result(self.conn_manager.query(ZIP_QUERY, [zip]))
             
     def __getitem__(self, zip):
         zip = self.get(str(zip))
