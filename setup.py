@@ -3,6 +3,13 @@ import sys, os
 
 version = '0.4'
 
+try:
+    import sqlite3
+except ImportError:
+    requires = ['pysqlite']
+else:
+    requires = []
+
 setup(name='pyzipcode',
       version=version,
       description="query zip codes and location data",
@@ -16,9 +23,7 @@ setup(name='pyzipcode',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=[
-        'pysqlite'
-      ],
+      install_requires=requires,
       entry_points="""
       # -*- Entry points: -*-
       """,
